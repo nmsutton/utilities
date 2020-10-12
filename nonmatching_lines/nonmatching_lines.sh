@@ -3,6 +3,9 @@
 # outputs lines that don't match between two files
 # usage: $ matching_lines.sh <file1> <file2> <output_file>
 #
+# for each line in file1 it is compared to file2. lines
+# in file1 that are in file2 are reported.
+#
 
 file1="$1";
 file2="$2";
