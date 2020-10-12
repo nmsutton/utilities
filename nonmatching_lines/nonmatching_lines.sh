@@ -4,7 +4,7 @@
 # usage: $ matching_lines.sh <file1> <file2> <output_file>
 #
 # for each line in file1 it is compared to file2. lines
-# in file1 that are in file2 are reported.
+# in file1 that are not in file2 are reported.
 #
 
 file1="$1";
