@@ -29,6 +29,19 @@
 				document.getElementsByName(textboxname)[0].value = select_val;
 			}			
 		}
+		function update_start() {
+			var start_val = document.getElementsByName('ud_start')[0].value;
+			var sv_parsed = start_val.split(":");
+			var updated_sv = parseInt(sv_parsed[0]*3600) + parseInt(sv_parsed[1]*60) + parseInt(sv_parsed[2]);
+			document.getElementsByName('start')[0].value = updated_sv;
+		}		
+		function update_end() {
+			var end_val = document.getElementsByName('ud_end')[0].value;
+			var ev_parsed = end_val.split(":");
+			var updated_ev = parseInt(ev_parsed[0]*3600) + parseInt(ev_parsed[1]*60) + parseInt(ev_parsed[2]);
+			var updated_ln = updated_ev - parseInt(document.getElementsByName('start')[0].value);
+			document.getElementsByName('length')[0].value = updated_ln;
+		}
 	</script>
 	<style type="text/css">
 	body {
@@ -319,6 +332,8 @@ if ($time_limit=='yes') {echo " selected";}
 echo ">yes</option><option value='no'";
 if ($time_limit=='no') {echo " selected";}
 echo ">no</option></select></td></tr>";
+echo "<tr><td>Video track start time</td><td><textarea style='width:200px;height:30px;' name='ud_start'>00:00:00</textarea></td><td><input type='button' name='ud_start_btn' value='Update' style='width:200px;' onclick='javascript:update_start()'></input></td></tr>";
+echo "<tr><td>Video track end time</td><td><textarea style='width:200px;height:30px;' name='ud_end'>00:00:00</textarea></td><td><input type='button' name='ud_end_btn' value='Update' style='width:200px;' onclick='javascript:update_end()'></input></td></tr>";
 echo "<tr><td>Time start</td><td><textarea style='width:200px;height:30px;' name='start'>$start</textarea></td><td> 1min = 60</td></tr>";
 echo "<tr><td>Time length</td><td><textarea style='width:200px;height:30px;' name='length'>$length</textarea></td></tr>";
 echo "<tr><td>Trim start x</td><td><textarea style='width:200px;height:30px;' name='start_x'>$start_x</textarea></td></tr>";

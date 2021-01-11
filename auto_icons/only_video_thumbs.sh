@@ -4,8 +4,8 @@ base_dir="";
 icon_file="";
 find_results="";
 starting_folder="";
-video_ext="\.mp4|\.wmv|\.mov|\.avi|\.flv|\.mpg|\.mpeg|\.f4v";
-video_ext2="mp4\|wmv\|mov\|avi\|flv\|mpg\|mpeg\|f4v";
+video_ext="\.mp4|\.wmv|\.mov|\.avi|\.flv|\.mpg|\.mpeg|\.f4v|\.webm";
+video_ext2="mp4\|wmv\|mov\|avi\|flv\|mpg\|mpeg\|f4v\|webm";
 
 sudo echo 'starting icons auto gen' #sudo because find uses sudo
 if [ "$#" -eq 1 ]; 

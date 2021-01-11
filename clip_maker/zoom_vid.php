@@ -124,6 +124,6 @@ echo "
 	// always overwrite window.name, in case users try to set it manually
 	window.name = "result"
 </script>
-<center><iframe src="zoom_command.php" width="800" height="640" style="border: none;overflow: hidden;"></iframe></center>
+<center><iframe src="zoom_command.php" width="800" height="720" style="border: none;overflow: hidden;"></iframe></center>
 </body>
 </html>
