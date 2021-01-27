@@ -9,6 +9,7 @@ video_ext2="mp4\|wmv\|mov\|avi\|flv\|mpg\|mpeg\|f4v\|webm";
 input_folder_name=$1;
 output_folder=$2;
 starting_folder=$3;
+mkdir $output_folder;
 
 addcustomicon(){
   command="xargs -L1 echo";
@@ -30,7 +31,11 @@ addcustomicon(){
 
   command="gio set \"$link_file\" metadata::custom-icon \"file://$orig_icon_file\"";
   #echo $command;
-  eval $command;
+
+  # check if file exists
+  if [ -f $orig_icon_file ]; then 
+      eval $command;
+  fi
 }
 
 addlinks(){
@@ -44,7 +49,7 @@ addlinks(){
   command="ln -s $video_file $output_folder$video_name";
   #echo $command;
 
-  #eval $command;
+  eval $command;
   echo \"$video_file $output_folder$video_name\" | addcustomicon
 }
 
@@ -55,3 +60,5 @@ for line in $find_results
 do
   echo \"$line\" | addlinks
 done
+
+echo "test1";
