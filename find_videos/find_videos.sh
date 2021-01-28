@@ -63,5 +63,3 @@ for line in $find_results
 do
   echo \"$line\" | addlinks
 done
-
-echo "test1";
