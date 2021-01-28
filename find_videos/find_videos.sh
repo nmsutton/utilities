@@ -33,8 +33,11 @@ addcustomicon(){
   #echo $command;
 
   # check if file exists
-  if [ -f $orig_icon_file ]; then 
+  if [ -f $orig_icon_file ]; 
+  then 
       eval $command;
+  else
+  	  /general/software/general/links/run_vid_folder_tmbs_30sec.sh "$orig_base_dir" && eval $command;
   fi
 }
 
