@@ -58,28 +58,9 @@ addlinks(){
   echo \"$video_file $output_folder$video_name\" | addcustomicon
 }
 
-# images in videos folder
-if [[ $clips_folder=="no" ]];
-then 
-	command="find -L $starting_folder*/$input_folder_name/* -regextype posix-awk -iregex '.+($video_ext)'";
-	find_results=$(eval $command);
-  #echo "$starting_folder*$input_folder_name/*";
-  #echo "test";
-	for line in $find_results
-	do
-	    echo \"$line\" | addlinks
-	    #echo $line
-	done
-fi
-
-# images in video clips folder
-if [[ $clips_folder=="yes" ]];
-then 
-	command="find -L $starting_folder/* -regextype posix-awk -iregex '.+($video_ext)'";
-	find_results=$(eval $command);
-	#for line in $find_results
-	#do
-	    #echo \"$line\" | addlinks
-	    #echo $line
-	#done
-fi
+command="find -L $starting_folder*/$input_folder_name/* -regextype posix-awk -iregex '.+($video_ext)'";
+find_results=$(eval $command);
+for line in $find_results
+do
+    echo \"$line\" | addlinks
+done
