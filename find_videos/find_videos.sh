@@ -9,6 +9,7 @@ video_ext2="mp4\|wmv\|mov\|avi\|flv\|mpg\|mpeg\|f4v\|webm";
 input_folder_name=$1;
 output_folder=$2;
 starting_folder=$3;
+clips_folder=$4;
 mkdir $output_folder;
 
 addcustomicon(){
@@ -45,7 +46,8 @@ addlinks(){
   command="xargs -L1 echo";
   video_file=$(eval $command);
 
-  command="echo $video_file | sed 's/^.*\/$input_folder_name\/\(.*\)$/\1/'";
+  #command="echo $video_file | sed 's/^.*\/$input_folder_name\/\(.*\)$/\1/'";
+  command="echo $video_file | sed 's/^.*\/\(.*\)$/\1/'";
   video_name=$(eval $command);
   #echo $video_name;
   #echo $video_file;
@@ -57,9 +59,27 @@ addlinks(){
 }
 
 # images in videos folder
-command="find -L $starting_folder/*/$input_folder_name/* -regextype posix-awk -iregex '.+($video_ext)'";
-find_results=$(eval $command);
-for line in $find_results
-do
-  echo \"$line\" | addlinks
-done
+if [[ $clips_folder=="no" ]];
+then 
+	command="find -L $starting_folder*/$input_folder_name/* -regextype posix-awk -iregex '.+($video_ext)'";
+	find_results=$(eval $command);
+  #echo "$starting_folder*$input_folder_name/*";
+  #echo "test";
+	for line in $find_results
+	do
+	    echo \"$line\" | addlinks
+	    #echo $line
+	done
+fi
+
+# images in video clips folder
+if [[ $clips_folder=="yes" ]];
+then 
+	command="find -L $starting_folder/* -regextype posix-awk -iregex '.+($video_ext)'";
+	find_results=$(eval $command);
+	#for line in $find_results
+	#do
+	    #echo \"$line\" | addlinks
+	    #echo $line
+	#done
+fi
