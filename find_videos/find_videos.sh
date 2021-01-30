@@ -51,14 +51,14 @@ addcustomicon(){
 
 addlinks(){
   command="xargs -L1 echo";
-  video_file=$(eval $command);
+  video_file="$(eval $command)";
   command="echo $video_file | sed 's/^\(.*\/\)\(.*\)$/\1/'";
   orig_base_dir=$(eval $command);
   #rename blanks
   command2="$rename_blanks_script $orig_base_dir";
 
   command="echo $video_file | sed 's/^.*\/\(.*\)$/\1/'";
-  video_name=$(eval $command);
+  video_name="$(eval $command)";
   command3="ln -s \"$video_file\" \"$output_folder$video_name\"";
 
   command4="$command2 && sleep 3 && $command3"; # sleep is to allow rename blanks to complete before creating link
