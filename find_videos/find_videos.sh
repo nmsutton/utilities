@@ -59,7 +59,10 @@ addlinks(){
 
   command="echo $video_file | sed 's/^.*\/\(.*\)$/\1/'";
   video_name="$(eval $command)";
-  command3="ln -s \"$video_file\" \"$output_folder$video_name\"";
+  if [ "$video_file" != "$output_folder$video_name" ];
+  then
+    command3="ln -s \"$video_file\" \"$output_folder$video_name\"";
+  fi
 
   command4="$command2 && sleep 3 && $command3"; # sleep is to allow rename blanks to complete before creating link
   eval $command4 && echo \"$video_file $output_folder$video_name\" | addcustomicon
