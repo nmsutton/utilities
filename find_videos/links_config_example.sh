@@ -38,7 +38,7 @@ do
 	folder_name=$(eval $command);
 	if [ $folder_name != "aab_groups" ] && [ $folder_name != "classic" ] && [ $folder_name != "favorites" ];
     then
-    	if [[ $i -gt $start ]] && [[ $i -lt $end ]];
+    	if [[ $i -ge $start ]] && [[ $i -le $end ]];
     	then
 			echo \"$folder_name\" | processfolder
   		fi
