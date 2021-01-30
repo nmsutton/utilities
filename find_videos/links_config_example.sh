@@ -1,10 +1,11 @@
 #!/bin/bash
 
 i=0; # file index
-folder1= # output directory
-folder2= # input directory
 start=0; # starting file index
 end=1000; # ending file index
+folder1= # output directory
+folder2= # input directory
+find_videos_script=/general/software/utilities/find_videos/find_videos.sh
 
 findmedia(){
 	command="xargs -L1 echo";
@@ -15,7 +16,8 @@ findmedia(){
     output_folder=$(eval $command);
     command="echo $args | cut -d' ' -f3";
     starting_folder=$(eval $command);
-	/general/software/utilities/find_videos/find_videos.sh $input_folder_name $output_folder $starting_folder
+	command="$find_videos_script $input_folder_name $output_folder $starting_folder";
+	eval $command;
 }
 
 processfolder(){
