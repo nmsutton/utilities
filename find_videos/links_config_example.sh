@@ -8,6 +8,7 @@ folder2= # input directory
 find_videos_script=/general/software/utilities/find_videos/find_videos.sh
 custom_folder_name=""; # specify a particular folder for input
 delete_new_output_folder="no"; # Remove previously created new output folder. The folder will be recreated.
+softlink_pics="yes";
 
 findmedia(){
 	command="xargs -L1 echo";
@@ -18,7 +19,7 @@ findmedia(){
     output_folder=$(eval $command);
     command="echo $args | cut -d' ' -f3";
     starting_folder=$(eval $command);
-	command="$find_videos_script $input_folder_name $output_folder $starting_folder";
+	command="$find_videos_script $input_folder_name $output_folder $starting_folder $folder1 $softlink_pics";
 	eval $command;
 }
 
