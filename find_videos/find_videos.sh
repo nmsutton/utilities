@@ -93,17 +93,6 @@ process_video_links(){
   done
 }
 
-command="$starting_folder*/$input_folder_name/*" && \
-echo \"$command\" | process_video_links && \
-command="$starting_folder*/*/$input_folder_name/*" && \
-echo \"$command\" | process_video_links && \
-command="$starting_folder*/*/*/$input_folder_name/*" && \
-echo \"$command\" | process_video_links && \
-command="$starting_folder*/*/*/*/$input_folder_name/*" && \
-echo \"$command\" | process_video_links && \
-command="$starting_folder*/*/*/*/*/$input_folder_name/*" && \
-echo \"$command\" | process_video_links
-
 #
 # make folder links
 #
@@ -229,3 +218,14 @@ command="$starting_folder*/*/*/*/$input_folder_name/" && \
 echo \"$command\" | process_folder_links && \
 command="$starting_folder*/*/*/*/*/$input_folder_name/" && \
 echo \"$command\" | process_folder_links
+
+command="$starting_folder*/$input_folder_name/*" && \
+echo \"$command\" | process_video_links && \
+command="$starting_folder*/*/$input_folder_name/*" && \
+echo \"$command\" | process_video_links && \
+command="$starting_folder*/*/*/$input_folder_name/*" && \
+echo \"$command\" | process_video_links && \
+command="$starting_folder*/*/*/*/$input_folder_name/*" && \
+echo \"$command\" | process_video_links && \
+command="$starting_folder*/*/*/*/*/$input_folder_name/*" && \
+echo \"$command\" | process_video_links
