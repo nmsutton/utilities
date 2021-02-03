@@ -80,13 +80,29 @@ addlinks(){
   eval $command4 && echo \"$video_file $output_folder$video_name\" | addcustomicon
 }
 
-command="find -L $starting_folder*/$input_folder_name/* -regextype posix-awk -iregex '.+($video_ext)'";
-find_results=$(eval $command);
-for line in $find_results
-do
-  echo \"$line\" | addlinks
-  sleep 3 # slow processing down to do other things while software runs
-done
+process_video_links(){
+  command="xargs -L1 echo";
+  video_folder_search="$(eval $command)";
+  command="find -L $video_folder_search -regextype posix-awk -iregex '.+($video_ext)'"
+  find_results="$(eval $command)";
+  for result in $find_results
+  do
+    echo \"$result\" | addlinks
+    #echo \"$result\"
+    sleep 3 # slow processing down to do other things while software runs
+  done
+}
+
+command="$starting_folder*/$input_folder_name/*" && \
+echo \"$command\" | process_video_links && \
+command="$starting_folder*/*/$input_folder_name/*" && \
+echo \"$command\" | process_video_links && \
+command="$starting_folder*/*/*/$input_folder_name/*" && \
+echo \"$command\" | process_video_links && \
+command="$starting_folder*/*/*/*/$input_folder_name/*" && \
+echo \"$command\" | process_video_links && \
+command="$starting_folder*/*/*/*/*/$input_folder_name/*" && \
+echo \"$command\" | process_video_links
 
 #
 # make folder links
@@ -157,44 +173,59 @@ foldericonrandom(){
   done
 }
 
-command="find $starting_folder*/$input_folder_name/ -type d";
-folders=$(eval $command);
-for folder in $folders
-do
-  echo "processing folder: $folder";
-  command="echo $folder | sed 's/^.*\/\(.*\)$/\1/'";
-  folder_search_name=$(eval $command);
-  if [ "$folder_search_name" != "icon" ] && [ "$folder_search_name" != "videos" ] \
-  && [ "$folder_search_name" != "combined" ] && [ "$folder_search_name" != "vids" ] \
-  && [ "$folder_search_name" != "clips" ] && [ "$folder_search_name" != "thumbnails" ];
-  then
-    if [ "$folder_search_name" == "" ]; 
+process_folder_links(){
+  command="xargs -L1 echo";
+  pic_folder_search=$(eval $command);
+  command="find $pic_folder_search -type d"
+  folders=$(eval $command);
+  for folder in $folders
+  do
+    #echo "processing folder: $folder";
+    command="echo $folder | sed 's/^.*\/\(.*\)$/\1/'";
+    folder_search_name=$(eval $command);
+    if [ "$folder_search_name" != "icon" ] && [ "$folder_search_name" != "videos" ] \
+    && [ "$folder_search_name" != "combined" ] && [ "$folder_search_name" != "vids" ] \
+    && [ "$folder_search_name" != "clips" ] && [ "$folder_search_name" != "thumbnails" ];
     then
-      command="echo $folder | sed 's/^.*\/\(.*\)\/$input_folder_name\/$/\1/'";
-      folder_search_name=$(eval $command);
-      folder_search_name="$folder_search_name$underscore$input_folder_name";
+      if [ "$folder_search_name" == "" ]; 
+      then
+        command="echo $folder | sed 's/^.*\/\(.*\)\/$input_folder_name\/$/\1/'";
+        folder_search_name=$(eval $command);
+        folder_search_name="$folder_search_name$underscore$input_folder_name";
 
-      echo "$folder" | picfolder
-      #echo "$folder";
-      echo \"$folder $folder_search_name $output_folder\" | folderlinks;
-    else
-      echo \"$folder $folder_search_name $output_folder\" | foldericonrandom;
+        echo "$folder" | picfolder
+        #echo "$folder";
+        echo \"$folder $folder_search_name $output_folder\" | folderlinks;
+      else
+        echo \"$folder $folder_search_name $output_folder\" | foldericonrandom;
+      fi
     fi
-  fi
-  
-  # set base folder icon
-  if [ "$folder_search_name" == "icon" ];
-  then
-    if [[ $folder != $base_folder$slash$input_folder_name* ]];
+    
+    # set base folder icon
+    if [ "$folder_search_name" == "icon" ];
     then
-      command="find -L $folder/* -maxdepth 0 -regextype posix-awk -iregex '.+($image_ext)'";
-      icon_results=$(eval $command);
-      for icon_image in $icon_results
-      do
-        command="gio set \"$output_folder\" metadata::custom-icon \"file://$icon_image\"";
-        eval $command;
-        #echo $icon_image;
-      done
+      if [[ $folder != $base_folder$slash$input_folder_name* ]];
+      then
+        command="find -L $folder/* -maxdepth 0 -regextype posix-awk -iregex '.+($image_ext)'";
+        icon_results=$(eval $command);
+        for icon_image in $icon_results
+        do
+          command="gio set \"$output_folder\" metadata::custom-icon \"file://$icon_image\"";
+          eval $command;
+          #echo $icon_image;
+        done
+      fi
     fi
-  fi
-done
+  done
+}
+
+command="$starting_folder*/$input_folder_name/" && \
+echo \"$command\" | process_folder_links && \
+command="$starting_folder*/*/$input_folder_name/" && \
+echo \"$command\" | process_folder_links && \
+command="$starting_folder*/*/*/$input_folder_name/" && \
+echo \"$command\" | process_folder_links && \
+command="$starting_folder*/*/*/*/$input_folder_name/" && \
+echo \"$command\" | process_folder_links && \
+command="$starting_folder*/*/*/*/*/$input_folder_name/" && \
+echo \"$command\" | process_folder_links
