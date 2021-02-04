@@ -128,10 +128,9 @@ folderlinks(){
   command="echo $args | cut -d' ' -f3";
   output_folder=$(eval $command);
 
-  if [ "$folder" != "$output_folder$folder_search_name" ];
+  if [ "$folder" != "$output_folder$folder_search_name" ] && [ "$folder" != "$base_folder$slash$input_folder_name" ];
   then
     command="ln -s \"$folder\" \"$output_folder$folder_search_name\"";
-    #echo $command;
     eval $command;
 
     command="$icon_folder_script \"$output_folder$folder_search_name\"";
@@ -153,12 +152,14 @@ foldericonrandom(){
   icon_results=$(eval $command);
   for icon_image in $icon_results
   do
-    command="ln -s \"$folder\" \"$output_folder$folder_search_name\"";
-    eval $command;
+    if [ "$output_folder$folder_search_name" != "$base_folder$slash$input_folder_name$slash$input_folder_name" ];
+    then
+      command="ln -s \"$folder\" \"$output_folder$folder_search_name\"";
+      eval $command;
 
-    command="gio set \"$output_folder$folder_search_name\" metadata::custom-icon \"file://$icon_image\"";
-    eval $command;
-    #echo "new cmd: $command";
+      command="gio set \"$output_folder$folder_search_name\" metadata::custom-icon \"file://$icon_image\"";
+      eval $command;
+    fi
   done
 }
 
@@ -208,12 +209,16 @@ process_folder_links(){
   done
 }
 
+test_mode="true";
+ln -s "/dummy/link" $base_folder$slash$input_folder_name$slash$input_folder_name;
+#if [ $test_mode = "false" ];
+#then
 command="$starting_folder*/$input_folder_name/" && \
 echo \"$command\" | process_folder_links && \
 command="$starting_folder*/*/$input_folder_name/" && \
 echo \"$command\" | process_folder_links && \
 command="$starting_folder*/*/*/$input_folder_name/" && \
-echo \"$command\" | process_folder_links && \
+echo \"$command\" | process_folder_links #&& \
 command="$starting_folder*/*/*/*/$input_folder_name/" && \
 echo \"$command\" | process_folder_links && \
 command="$starting_folder*/*/*/*/*/$input_folder_name/" && \
@@ -229,3 +234,7 @@ command="$starting_folder*/*/*/*/$input_folder_name/*" && \
 echo \"$command\" | process_video_links && \
 command="$starting_folder*/*/*/*/*/$input_folder_name/*" && \
 echo \"$command\" | process_video_links
+#fi
+
+trash-put $base_folder$slash$input_folder_name$slash$input_folder_name;
+#echo $base_folder$slash$input_folder_name$slash$input_folder_name;
