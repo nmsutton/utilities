@@ -38,7 +38,7 @@ then
 	if [ $delete_new_output_folder == "yes" ];
 	then
 		trash-put $folder1/$custom_folder_name/combined/
-	fi
+	fi	
 	echo \"$custom_folder_name\" | processfolder
 	#echo \"$custom_folder_name\"
 else
@@ -55,7 +55,7 @@ else
 	    		if [[ $delete_new_output_folder=="yes" ]];
 				then
 					trash-put $folder1/$folder_name/combined/
-				fi
+				fi				
 				echo \"$folder_name\" | processfolder
 				#echo \"$folder_name\" && echo "i: $i"
 	  		fi
