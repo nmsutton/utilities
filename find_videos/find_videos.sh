@@ -25,6 +25,7 @@ underscore="_";
 slash="/";
 picsfldr="/pics";
 iconfldr="/icon";
+self_link=$base_folder$slash$input_folder_name$slash$input_folder_name;
 mkdir $base_folder$slash$input_folder_name;
 mkdir $base_folder$slash$input_folder_name$iconfldr;
 mkdir $output_folder;
@@ -209,10 +210,8 @@ process_folder_links(){
   done
 }
 
-test_mode="true";
-ln -s "/dummy/link" $base_folder$slash$input_folder_name$slash$input_folder_name;
-#if [ $test_mode = "false" ];
-#then
+trash-put $self_link;
+ln -s "/dummy/link" $self_link; # link to avoid self-link issues with icon targets
 command="$starting_folder*/$input_folder_name/" && \
 echo \"$command\" | process_folder_links && \
 command="$starting_folder*/*/$input_folder_name/" && \
@@ -234,7 +233,5 @@ command="$starting_folder*/*/*/*/$input_folder_name/*" && \
 echo \"$command\" | process_video_links && \
 command="$starting_folder*/*/*/*/*/$input_folder_name/*" && \
 echo \"$command\" | process_video_links
-#fi
 
-trash-put $base_folder$slash$input_folder_name$slash$input_folder_name;
-#echo $base_folder$slash$input_folder_name$slash$input_folder_name;
+trash-put $self_link;
