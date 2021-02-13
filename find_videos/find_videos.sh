@@ -25,7 +25,7 @@ underscore="_";
 slash="/";
 picsfldr="/pics";
 iconfldr="/icon";
-self_link=$base_folder$slash$input_folder_name$slash$input_folder_name;
+#self_link=$base_folder$slash$input_folder_name$slash$input_folder_name;
 mkdir $base_folder$slash$input_folder_name;
 mkdir $base_folder$slash$input_folder_name$iconfldr;
 mkdir $output_folder;
@@ -72,10 +72,15 @@ addlinks(){
 
   command="echo $video_file | sed 's/^.*\/\(.*\)$/\1/'";
   video_name="$(eval $command)";
-  #if [ "$video_file" != "$output_folder$video_name" ];
   if [[ "$output_folder$video_name" != "*$video_name$slash$video_name*" ]];
   then
-    command3="ln -s \"$video_file\" \"$output_folder$video_name\"";
+    if [ -e "$output_folder$video_name" ]; 
+    then
+      # avoid duplicate link generation
+      skip_this_section = "yes";
+    else
+      command3="ln -s \"$video_file\" \"$output_folder$video_name\"";
+    fi
   fi
 
   command4="$command2 && sleep 3 && $command3"; # sleep is to allow rename blanks to complete before creating link
@@ -90,7 +95,6 @@ process_video_links(){
   for result in $find_results
   do
     echo \"$result\" | addlinks
-    #echo \"$result\"
     sleep 3 # slow processing down to do other things while software runs
   done
 }
@@ -101,7 +105,6 @@ process_video_links(){
 picfolder(){
   command="xargs -L1 echo";
   picsdir=$(eval $command);
-  #echo $picsdir;
   command="find -L $picsdir/* -maxdepth 0 -regextype posix-awk -iregex '.+($image_ext)'";
   pics=$(eval $command);
   for pic in $pics
@@ -116,7 +119,6 @@ picfolder(){
       command="cp $pic $output_folder$picsfldr";
       eval $command;
     fi
-    #echo $pic;
   done
 }
 
@@ -130,7 +132,6 @@ folderlinks(){
   command="echo $args | cut -d' ' -f3";
   output_folder=$(eval $command);
 
-  #if [ "$folder" != "$output_folder$folder_search_name" ] && [ "$folder" != "$base_folder$slash$input_folder_name" ];
   if [[ "$output_folder$folder_search_name" != "*$folder_search_name$slash$folder_search_name*" ]];
   then
     if [ -e "$output_folder$folder_search_name" ]; 
@@ -139,7 +140,6 @@ folderlinks(){
       skip_this_section = "yes";
     else
       command="ln -s \"$folder\" \"$output_folder$folder_search_name\"";
-      #command="echo \"test ln -s \\\"$folder\\\" \\\"$output_folder$folder_search_name\\\"\"";
       eval $command;
 
       command="$icon_folder_script \"$output_folder$folder_search_name\"";
@@ -162,14 +162,19 @@ foldericonrandom(){
   icon_results=$(eval $command);
   for icon_image in $icon_results
   do
-    #if [ "$output_folder$folder_search_name" != "$base_folder$slash$input_folder_name$slash$input_folder_name" ];
     if [[ "$output_folder$folder_search_name" != "*$folder_search_name$slash$folder_search_name*" ]];
     then
-      command="ln -s \"$folder\" \"$output_folder$folder_search_name\"";
-      eval $command;
+      if [ -e "$output_folder$folder_search_name" ]; 
+        then
+          # avoid duplicate link generation
+          skip_this_section = "yes";
+        else
+          command="ln -s \"$folder\" \"$output_folder$folder_search_name\"";
+          eval $command;
 
-      command="gio set \"$output_folder$folder_search_name\" metadata::custom-icon \"file://$icon_image\"";
-      eval $command;
+          command="gio set \"$output_folder$folder_search_name\" metadata::custom-icon \"file://$icon_image\"";
+          eval $command;
+        fi
     fi
   done
 }
@@ -181,7 +186,6 @@ process_folder_links(){
   folders=$(eval $command);
   for folder in $folders
   do
-    #echo "processing folder: $folder";
     command="echo $folder | sed 's/^.*\/\(.*\)$/\1/'";
     folder_search_name=$(eval $command);
     if [ "$folder_search_name" != "icon" ] && [ "$folder_search_name" != "videos" ] \
@@ -195,7 +199,6 @@ process_folder_links(){
         folder_search_name="$folder_search_name$underscore$input_folder_name";
 
         echo "$folder" | picfolder
-        #echo "$folder";
         echo \"$folder $folder_search_name $output_folder\" | folderlinks;
       else
         echo \"$folder $folder_search_name $output_folder\" | foldericonrandom;
@@ -208,34 +211,29 @@ process_folder_links(){
       if [[ $folder != $base_folder$slash$input_folder_name* ]];
       then
         command="find -L $folder/* -maxdepth 0 -regextype posix-awk -iregex '.+($image_ext)'";
-        #find -L ./* -regextype posix-awk -iregex '.+/kiara_cole/.+(.jpg)'
         icon_results=$(eval $command);
         for icon_image in $icon_results
         do
           command="gio set \"$output_folder\" metadata::custom-icon \"file://$icon_image\"";
           eval $command;
-          #echo $icon_image;
         done
       fi
     fi
   done
 }
 
-trash-put $self_link;
-ln -s "/dummy/link" $self_link; # link to avoid self-link issues with icon targets
+#trash-put $self_link;
+#ln -s "/dummy/link" $self_link; # link to avoid self-link issues with icon targets
 command="$starting_folder*/$input_folder_name/" && \
 echo \"$command\" | process_folder_links && \
 command="$starting_folder*/*/$input_folder_name/" && \
 echo \"$command\" | process_folder_links && \
-#if [ "true" = "true" ];
-#then
 command="$starting_folder*/*/*/$input_folder_name/" && \
 echo \"$command\" | process_folder_links && \
 command="$starting_folder*/*/*/*/$input_folder_name/" && \
 echo \"$command\" | process_folder_links && \
 command="$starting_folder*/*/*/*/*/$input_folder_name/" && \
 echo \"$command\" | process_folder_links
-#fi
 
 command="$starting_folder*/$input_folder_name/*" && \
 echo \"$command\" | process_video_links && \
@@ -248,4 +246,4 @@ echo \"$command\" | process_video_links && \
 command="$starting_folder*/*/*/*/*/$input_folder_name/*" && \
 echo \"$command\" | process_video_links
 
-trash-put $self_link;
+#trash-put $self_link;
