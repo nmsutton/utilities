@@ -72,7 +72,8 @@ addlinks(){
 
   command="echo $video_file | sed 's/^.*\/\(.*\)$/\1/'";
   video_name="$(eval $command)";
-  if [ "$video_file" != "$output_folder$video_name" ];
+  #if [ "$video_file" != "$output_folder$video_name" ];
+  if [[ "$output_folder$video_name" != "*$video_name$slash$video_name*" ]];
   then
     command3="ln -s \"$video_file\" \"$output_folder$video_name\"";
   fi
@@ -129,13 +130,21 @@ folderlinks(){
   command="echo $args | cut -d' ' -f3";
   output_folder=$(eval $command);
 
-  if [ "$folder" != "$output_folder$folder_search_name" ] && [ "$folder" != "$base_folder$slash$input_folder_name" ];
+  #if [ "$folder" != "$output_folder$folder_search_name" ] && [ "$folder" != "$base_folder$slash$input_folder_name" ];
+  if [[ "$output_folder$folder_search_name" != "*$folder_search_name$slash$folder_search_name*" ]];
   then
-    command="ln -s \"$folder\" \"$output_folder$folder_search_name\"";
-    eval $command;
+    if [ -e "$output_folder$folder_search_name" ]; 
+    then
+      # avoid duplicate link generation
+      skip_this_section = "yes";
+    else
+      command="ln -s \"$folder\" \"$output_folder$folder_search_name\"";
+      #command="echo \"test ln -s \\\"$folder\\\" \\\"$output_folder$folder_search_name\\\"\"";
+      eval $command;
 
-    command="$icon_folder_script \"$output_folder$folder_search_name\"";
-    eval $command;
+      command="$icon_folder_script \"$output_folder$folder_search_name\"";
+      eval $command;
+    fi
   fi
 }
 
@@ -153,7 +162,8 @@ foldericonrandom(){
   icon_results=$(eval $command);
   for icon_image in $icon_results
   do
-    if [ "$output_folder$folder_search_name" != "$base_folder$slash$input_folder_name$slash$input_folder_name" ];
+    #if [ "$output_folder$folder_search_name" != "$base_folder$slash$input_folder_name$slash$input_folder_name" ];
+    if [[ "$output_folder$folder_search_name" != "*$folder_search_name$slash$folder_search_name*" ]];
     then
       command="ln -s \"$folder\" \"$output_folder$folder_search_name\"";
       eval $command;
@@ -198,6 +208,7 @@ process_folder_links(){
       if [[ $folder != $base_folder$slash$input_folder_name* ]];
       then
         command="find -L $folder/* -maxdepth 0 -regextype posix-awk -iregex '.+($image_ext)'";
+        #find -L ./* -regextype posix-awk -iregex '.+/kiara_cole/.+(.jpg)'
         icon_results=$(eval $command);
         for icon_image in $icon_results
         do
@@ -216,12 +227,15 @@ command="$starting_folder*/$input_folder_name/" && \
 echo \"$command\" | process_folder_links && \
 command="$starting_folder*/*/$input_folder_name/" && \
 echo \"$command\" | process_folder_links && \
+#if [ "true" = "true" ];
+#then
 command="$starting_folder*/*/*/$input_folder_name/" && \
-echo \"$command\" | process_folder_links #&& \
+echo \"$command\" | process_folder_links && \
 command="$starting_folder*/*/*/*/$input_folder_name/" && \
 echo \"$command\" | process_folder_links && \
 command="$starting_folder*/*/*/*/*/$input_folder_name/" && \
 echo \"$command\" | process_folder_links
+#fi
 
 command="$starting_folder*/$input_folder_name/*" && \
 echo \"$command\" | process_video_links && \
