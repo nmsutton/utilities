@@ -224,6 +224,8 @@ process_folder_links(){
 
 #trash-put $self_link;
 #ln -s "/dummy/link" $self_link; # link to avoid self-link issues with icon targets
+command="$starting_folder/$input_folder_name/" && \
+echo \"$command\" | process_folder_links && \
 command="$starting_folder*/$input_folder_name/" && \
 echo \"$command\" | process_folder_links && \
 command="$starting_folder*/*/$input_folder_name/" && \
@@ -235,6 +237,8 @@ echo \"$command\" | process_folder_links && \
 command="$starting_folder*/*/*/*/*/$input_folder_name/" && \
 echo \"$command\" | process_folder_links
 
+command="$starting_folder/$input_folder_name/*" && \
+echo \"$command\" | process_video_links && \
 command="$starting_folder*/$input_folder_name/*" && \
 echo \"$command\" | process_video_links && \
 command="$starting_folder*/*/$input_folder_name/*" && \
