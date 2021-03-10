@@ -7,6 +7,10 @@
 # https://www.tecmint.com/sync-new-changed-modified-files-rsync-linux/
 # https://www.atlantic.net/vps-hosting/how-to-use-rsync-copy-sync-files-servers/
 #
+# Create saved password ssh connection:
+# https://www.thegeekstuff.com/2008/11/3-steps-to-perform-ssh-login-without-password-using-ssh-keygen-ssh-copy-id/
+#
+# Note: currently running without delete option to test software for safety
 
 SOURCE="/home/nmsutton/Dropbox/CompNeuro/gmu/research";
 DESTINATION="pi@192.168.0.68:/home/pi/Dropbox/CompNeuro/gmu";
@@ -25,4 +29,4 @@ DESTINATION="pi@192.168.0.68:/home/pi/Dropbox/CompNeuro/gmu";
 # Push SOURCE to DESTINATION
 rsync -au --info=progress2 --size-only -e ssh $SOURCE $DESTINATION
 
-echo "local to remote sync completed.";
+#echo "local to remote sync completed.";
