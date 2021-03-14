@@ -6,8 +6,9 @@
 # See local_to_rem_sync.sh for references
 #
 
-SOURCE="/home/nmsutton/Dropbox/CompNeuro/gmu";
-DESTINATION="pi@192.168.0.68:/home/pi/Dropbox/CompNeuro/gmu/research";
+REMOTE_SERVER="pi@192.168.0.68:";
+SOURCE="$1";
+DESTINATION="$REMOTE_SERVER$2";
 
 # See local_to_rem_sync.sh for options descriptions
 

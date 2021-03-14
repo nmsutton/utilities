@@ -12,8 +12,9 @@
 #
 # Note: currently running without delete option to test software for safety
 
-SOURCE="/home/nmsutton/Dropbox/CompNeuro/gmu/research";
-DESTINATION="pi@192.168.0.68:/home/pi/Dropbox/CompNeuro/gmu";
+REMOTE_SERVER="pi@192.168.0.68:";
+SOURCE="$1";
+DESTINATION="$REMOTE_SERVER$2";
 
 #
 # Options

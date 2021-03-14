@@ -11,7 +11,7 @@ then
 	echo "how to run: sync_files.sh push_source push_dest pull_source pull_dest";
 fi
 
-REMOTE_SERVER="pi@192.168.0.68:"
+REMOTE_SERVER="pi@192.168.0.68:";
 PUSH_SOURCE="$1";
 PUSH_DESTINATION="$REMOTE_SERVER$2";
 PULL_SOURCE="$3";
