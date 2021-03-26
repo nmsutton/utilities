@@ -15,6 +15,7 @@
 REMOTE_SERVER="pi@192.168.0.68:";
 SOURCE="$1";
 DESTINATION="$REMOTE_SERVER$2";
+DELETE_OPT="$3";
 
 #
 # Options
@@ -28,6 +29,10 @@ DESTINATION="$REMOTE_SERVER$2";
 #
 
 # Push SOURCE to DESTINATION
-rsync -au --info=progress2 --size-only -e ssh $SOURCE $DESTINATION
+if [[ $DELETE_OPT == "DELETE_ON" ]]; then
+  rsync -au --delete --info=progress2 --size-only -e ssh $SOURCE $DESTINATION
+else
+  rsync -au --info=progress2 --size-only -e ssh $SOURCE $DESTINATION
+fi
 
 #echo "local to remote sync completed.";

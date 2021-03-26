@@ -13,6 +13,6 @@ DESTINATION="$REMOTE_SERVER$2";
 # See local_to_rem_sync.sh for options descriptions
 
 # Pull DESTINATION to SOURCE
-rsync -au --info=progress2 --size-only -e ssh $DESTINATION $SOURCE 
+rsync -au --info=progress2 --size-only -e ssh $DESTINATION $SOURCE
 
 #echo "remote to local sync completed.";
