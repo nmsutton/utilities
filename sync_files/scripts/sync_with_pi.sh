@@ -30,7 +30,7 @@ syncfldrs(){
 	eval $command;
 }
 
-for psite in $psites
+for psite in "${psites[@]}"
 do
 	fl1="/media/nmsutton/StorageDrive6/ExtraFiles/";
 	fl1=$fl1$psite;
@@ -39,7 +39,7 @@ do
 	fr2="/media/pi/StorageDrive5/ExtraFiles/";
 	fr2=$fr2$psite;
 
-	echo \"$fl1 $fr1 $fl2 $fr2 $DELETE_OPT $PUSH_ONLY\" | syncfldrs;
+	echo \"$fl1 $fr1 $fl2 $fr2 $DELETE_OPT $PUSH_OPT\" | syncfldrs;
 done
 
 fl1="/media/example_folder/ExtraFiles";
