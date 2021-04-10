@@ -25,11 +25,14 @@ underscore="_";
 slash="/";
 picsfldr="/pics";
 iconfldr="/icon";
+vidsfldr="/videos";
 #self_link=$base_folder$slash$input_folder_name$slash$input_folder_name;
 mkdir $base_folder$slash$input_folder_name;
 mkdir $base_folder$slash$input_folder_name$iconfldr;
 mkdir $output_folder;
 mkdir $output_folder$picsfldr;
+mkdir $output_folder$iconfldr;
+mkdir $output_folder$iconfldr$vidsfldr;
 
 #
 # create video links
@@ -61,6 +64,10 @@ addcustomicon(){
   else
   	  eval $command2 && eval $command;
   fi
+
+  # copy icon
+  command="cp $orig_icon_file $output_folder$iconfldr$slash$vidsfldr$slash$orig_file_name$icon_ext";
+  eval $command;
 }
 
 addlinks(){

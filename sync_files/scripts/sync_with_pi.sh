@@ -2,7 +2,7 @@
 
 psites=("exampe_folder_name1" "example_folder_name2")
 DELETE_OPT="DELETE_ON";
-PUSH_OPT=""; # "PUSH_ONLY";
+PUSH_OPT="PUSH_ONLY";
 
 syncfldrs(){
 	command="xargs -L1 echo";
