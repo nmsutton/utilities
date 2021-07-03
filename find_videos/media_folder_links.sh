@@ -5,7 +5,11 @@ base_dir="/general/software/general/medialink/basedir2";
 comb_cmd="";
 and_cmd=" && ";
 quote="\"";
+space=" ";
+sudo="sudo ";
+select="Selection: ";
 fldr_select="0";
+find_vids_prog="/general/software/general/scripts/links_config1.sh";
 
 command="cd $base_dir";
 eval $command;
@@ -42,10 +46,22 @@ command=$echo_cmd$quote$comb_cmd$quote;
 eval $command;
 
 echo "";
-echo "Please select a number";
+echo "Please select a number. Type \"other\" for a new folder.";
 read -r fldr_select;
 
 i=1 #folder index
 
 read_folders;
-echo $fldr_select;
+echo $select$fldr_select;
+
+if [ "$fldr_select" == "other" ];
+then
+	echo "Please type a new folder name.";
+	read -r fldr_select;
+fi
+
+command=$find_vids_prog$space$fldr_select;
+eval $command;
+echo $select$fldr_select;
+
+echo "processing completed";
