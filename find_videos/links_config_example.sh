@@ -7,8 +7,12 @@ folder1= # output directory
 folder2= # input directory
 find_videos_script=/general/software/utilities/find_videos/find_videos.sh
 custom_folder_name=""; # specify a particular folder for input
-delete_new_output_folder="no"; # Remove previously created new output folder. The folder will be recreated.
-softlink_pics="yes";
+if [ "$#" -eq 1 ]; 
+then
+    custom_folder_name=$1
+fi
+delete_new_output_folder="yes"; # Remove previously created new output folder. The folder will be recreated.
+softlink_pics="no";
 
 # clear folder
 if [[ $delete_new_output_folder == "yes" ]];
