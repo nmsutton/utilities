@@ -2,11 +2,12 @@
 
 i=1 #folder index
 base_dir="/general/software/general/medialink/basedir2";
-comb_cmd="";
-and_cmd=" && ";
+comb_cmd="Select folder: ______";
+and_cmd=" && \t ";
 quote="\"";
 space=" ";
 sudo="sudo ";
+echo_cmd="echo -e ";
 select="Selection: ";
 fldr_select="0";
 find_vids_prog="/general/software/general/scripts/links_config1.sh";
@@ -26,7 +27,9 @@ read_folders(){
 	&& [ "$folder_search_name" != "clips" ] && [ "$folder_search_name" != "thumbnails" ] \
 	&& [ "$folder_search_name" != "favorites" ];
 	then
-		new_command="[$i] $folder ";
+		command="echo \"[$i] $folder __________________________\" | cut -c1-21";
+		upd_folder=$(eval $command);
+		new_command="\t\t $upd_folder ";
 		comb_cmd=$comb_cmd$new_command;
 
 		if [ "$fldr_select" == "$i" ];
@@ -41,7 +44,6 @@ read_folders(){
 
 read_folders;
 
-echo_cmd="echo ";
 command=$echo_cmd$quote$comb_cmd$quote;
 eval $command;
 
