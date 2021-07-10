@@ -84,7 +84,7 @@ addlinks(){
     if [ -e "$output_folder$video_name" ]; 
     then
       # avoid duplicate link generation
-      skip_this_section = "yes";
+      skip_this_section = "y";
     else
       command3="ln -s \"$video_file\" \"$output_folder$video_name\"";
     fi
@@ -116,7 +116,7 @@ picfolder(){
   pics=$(eval $command);
   for pic in $pics
   do
-    if [ $softlink_pics = "yes" ];
+    if [ $softlink_pics = "y" ];
     then
       command="echo $folder | sed 's/^.*\/\(.*\)$/\1/'";
       pic_search_name=$(eval $command);
@@ -144,7 +144,7 @@ folderlinks(){
     if [ -e "$output_folder$folder_search_name" ]; 
     then
       # avoid duplicate link generation
-      skip_this_section = "yes";
+      skip_this_section = "y";
     else
       command="ln -s \"$folder\" \"$output_folder$folder_search_name\"";
       eval $command;
@@ -174,7 +174,7 @@ foldericonrandom(){
       if [ -e "$output_folder$folder_search_name" ]; 
         then
           # avoid duplicate link generation
-          skip_this_section = "yes";
+          skip_this_section = "y";
         else
           command="ln -s \"$folder\" \"$output_folder$folder_search_name\"";
           eval $command;

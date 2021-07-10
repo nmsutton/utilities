@@ -1,5 +1,8 @@
 #!/bin/bash
 
+delete_new_output_folder="y"; # Remove previously created new output folder. The folder will be recreated.
+softlink_pics="n";
+
 i=1 #folder index
 base_dir="/general/software/general/medialink/basedir2";
 comb_cmd="Select folder: ______";
@@ -11,6 +14,7 @@ echo_cmd="echo -e ";
 select="Selection: ";
 fldr_select="0";
 find_vids_prog="/general/software/general/scripts/links_config1.sh";
+find_vids_prog2="/general/software/general/scripts/links_config2.sh";
 
 command="cd $base_dir";
 eval $command;
@@ -48,7 +52,7 @@ command=$echo_cmd$quote$comb_cmd$quote;
 eval $command;
 
 echo "";
-echo "Please select a number. Type \"other\" for a new folder.";
+echo "Please select a number. Type \"other\" for a new folder. Type \"options\" for software options.";
 read -r fldr_select;
 
 i=1 #folder index
@@ -62,7 +66,25 @@ then
 	read -r fldr_select;
 fi
 
-command=$find_vids_prog$space$fldr_select;
+if [ "$fldr_select" == "options" ];
+then
+	echo "Delete original folder (y or n)?";
+	read -r delete_new_output_folder;
+	echo "Create image softlinks (y or n)?";
+	read -r softlink_pics;
+	echo "Please select a number. Type \"other\" for a new folder.";
+	read -r fldr_select;
+
+	if [ "$fldr_select" == "other" ];
+	then
+		echo "Please type a new folder name.";
+		read -r fldr_select;
+	fi
+fi
+
+command=$find_vids_prog$space$fldr_select$space$delete_new_output_folder$space$softlink_pics;
+eval $command;
+command=$find_vids_prog2$space$fldr_select$space$delete_new_output_folder$space$softlink_pics;
 eval $command;
 echo $select$fldr_select;
 

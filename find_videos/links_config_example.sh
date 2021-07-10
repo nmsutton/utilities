@@ -7,15 +7,17 @@ folder1= # output directory
 folder2= # input directory
 find_videos_script=/general/software/utilities/find_videos/find_videos.sh
 custom_folder_name=""; # specify a particular folder for input
-if [ "$#" -eq 1 ]; 
+delete_new_output_folder="y"; # Remove previously created new output folder. The folder will be recreated.
+softlink_pics="n";
+if [ "$#" -eq 3 ]; 
 then
     custom_folder_name=$1
+    delete_new_output_folder=$2
+    softlink_pics=$3
 fi
-delete_new_output_folder="yes"; # Remove previously created new output folder. The folder will be recreated.
-softlink_pics="no";
 
 # clear folder
-if [[ $delete_new_output_folder == "yes" ]];
+if [[ $delete_new_output_folder == "y" ]];
 then
 	if [[ $custom_folder_name != "" ]];
 	then
