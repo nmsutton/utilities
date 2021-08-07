@@ -1,0 +1,3 @@
+#!/bin/sh
+
+/home/nmsutton/.config/caja/scripts/extract_zips "$PWD" && /home/nmsutton/.config/caja/scripts/create_icons "$PWD" && /home/nmsutton/.config/caja/scripts/vid_tmbs_2sec "$PWD"

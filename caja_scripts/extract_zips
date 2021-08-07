@@ -1,0 +1,9 @@
+#!/bin/sh
+
+xterm -e "/media/veracrypt10/other/General/scripts/unzip_here/unzip_all.sh \"$PWD\"";
+#/media/veracrypt10/other/General/scripts/unzip_here/unzip_all.sh "$PWD";
+
+mkdir $PWD/icon;
+command="find $PWD/ -iname \"*.jpg\" | sort -h | head -n 1 | sed -n 1p";
+icon_file=$(eval $command);
+cp $icon_file ./icon;

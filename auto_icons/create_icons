@@ -1,0 +1,6 @@
+#!/bin/sh
+
+#cd $CAJA_SCRIPT_CURRENT_URI;
+#command="gnome-terminal -e \"/media/veracrypt10/other/General/software/custom_icon/auto_icon_assign_curr_fold.sh \\\"$PWD\\\"\"";
+#exec $command;
+gnome-terminal -e "/media/veracrypt10/other/General/software/custom_icon/auto_icon_assign_curr_fold.sh \"$PWD\"";

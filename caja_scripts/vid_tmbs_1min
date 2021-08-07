@@ -1,0 +1,4 @@
+#!/bin/sh
+
+#xterm -e "/media/veracrypt10/other/General/software/auto_scsh_tmbs/run_vid_folder_tmbs_30sec.sh \"$PWD\" && chmod 777 \"$PWD/icon\"";
+xterm -e "/media/veracrypt10/other/General/software/auto_scsh_tmbs/run_vid_folder_tmbs_1min.sh \"$PWD\"";

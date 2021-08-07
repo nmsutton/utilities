@@ -1,0 +1,3 @@
+#!/bin/sh
+
+xterm -e "/media/veracrypt10/other/General/software/auto_scsh_tmbs/run_vid_folder_tmbs_2sec.sh \"$PWD\" && sudo chmod 777 \"$PWD/icon\"";

@@ -1,0 +1,4 @@
+#!/bin/sh
+
+gnome-terminal
+# -e "cd \"$PWD\"";

@@ -1,0 +1,10 @@
+#!/bin/sh
+
+/general/software/utilities/rename_blanks/rename_blanks.sh "$PWD" && /home/nmsutton/.config/caja/scripts/extract_zips "$PWD" && /home/nmsutton/.config/caja/scripts/create_icons "$PWD" && /home/nmsutton/.config/caja/scripts/vid_tmbs_30sec "$PWD"
+
+mkdir $PWD/icon;
+command="find $PWD/ -iname \"*.jpg\" | sort -h | head -n 1 | sed -n 1p";
+icon_file=$(eval $command);
+cp $icon_file ./icon;
+
+/home/nmsutton/.config/caja/scripts/create_icons "$PWD"
