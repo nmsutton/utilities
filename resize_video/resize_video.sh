@@ -1,12 +1,13 @@
 #!/bin/bash
 
-w=3600 #2880
-h=1800 #1440
-time_limit="" #"-t 00:00:10";
+w=3840 #3600 #2880
+h=1920 #1800 #1440
+time_limit="";
+#lime_limit="-t 00:00:30";
 
 video_name_ext=".*";
 input_vid=$1
-resize="_resized.";
+resize="_resized_1080.";
 slash="/";
 command="echo $input_vid | sed 's/^\/.*[.]\($video_name_ext\)$/\1/'";
 extension=$(eval $command);
