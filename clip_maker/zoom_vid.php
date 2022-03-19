@@ -35,6 +35,8 @@
 			  //playSelectedFile();
 				var videocontainer = document.getElementById('loaded_video');
 				var videosource = document.getElementById('video_source');
+				var videocontainer2 = document.getElementById('previewvideo');
+				var videosource2 = document.getElementById('video_source2');				
 				<?php
 					if (isset($_REQUEST['original_file'])) {
 						$_REQUEST['video_url'] = $_REQUEST['original_file'];
@@ -47,14 +49,30 @@
 				var newmp4 = document.getElementById('original_file').value;
 				var newposter = 'images/video-cover.jpg';
 				 
-				var videobutton = document.getElementById("videolink1");
-				 
+				var videobutton = document.getElementById("videolink1");				 
 				videobutton.addEventListener("click", function(event) {
 					newmp4 = document.getElementById('original_file').value;
+					let newurl = newmp4.replace("\/var\/www\/html", "");
+					document.getElementById('original_file').value = newurl;
 				    videocontainer.pause();
-				    videosource.setAttribute('src', newmp4);
+				    videosource.setAttribute('src', newurl);
 				    videocontainer.load();
 				    videocontainer.play();
+				}, false);
+
+				var previewbutton = document.getElementById("previewlink");
+				previewbutton.addEventListener("click", function(event) {
+					var startTime = parseInt(document.getElementById("start").innerHTML);
+					var endTime = startTime + parseInt(document.getElementById("length").innerHTML);					
+					newmp4 = document.getElementById('original_file').value;
+					let newurl = newmp4.replace("\/var\/www\/html", "");
+					document.getElementById('original_file').value = newurl;
+					newurl = newurl+"#t="+startTime+","+endTime;
+				    videocontainer2.pause();
+				    videosource2.setAttribute('src', newurl);
+				    videocontainer2.load();
+				    //videocontainer2.play();
+				    play_video_preview();
 				}, false);
 				<?php
 					if (isset($_REQUEST['video_url']) || isset($_REQUEST['original_file'])) {
@@ -71,7 +89,7 @@
 			  inputNode.addEventListener('change', playSelectedFile, false)
 			})()
     	}
-    	function settime(){
+    	function gettime(){
 		  var video= document.getElementById("loaded_video");
 		  console.log(video.currentTime);
 		  var time = Math.floor(video.currentTime);
@@ -80,6 +98,24 @@
 		  var MHSTime = measuredTime.toISOString().substr(11, 8);
 		  var time_report = MHSTime;
 		  document.getElementById("ud_start").innerHTML= time_report;
+		}
+		function settime(){
+		  var video=document.getElementById("loaded_video");
+		  video.currentTime=parseInt(document.getElementById("start").innerHTML);
+		}
+		function gettimeend(){
+		  var video= document.getElementById("loaded_video");
+		  console.log(video.currentTime);
+		  var time = Math.floor(video.currentTime);
+		  var measuredTime = new Date(null);
+		  measuredTime.setSeconds(time); // specify value of SECONDS
+		  var MHSTime = measuredTime.toISOString().substr(11, 8);
+		  var time_report = MHSTime;
+		  document.getElementById("ud_end").innerHTML= time_report;
+		}
+		function settimeend(){
+		  var video=document.getElementById("loaded_video");
+		  video.currentTime=parseInt(document.getElementById("start").innerHTML)+parseInt(document.getElementById("length").innerHTML);
 		}
 		function settimeend(){
 		  var video= document.getElementById("loaded_video");
@@ -91,6 +127,27 @@
 		  var time_report = MHSTime;
 		  document.getElementById("ud_end").innerHTML= time_report;
 		}
+		function play_video_preview() {
+			var startTime = parseInt(document.getElementById("start").innerHTML);
+			var endTime = startTime + parseInt(document.getElementById("length").innerHTML);
+	       var videoplayer = document.getElementById("previewvideo");  //get your videoplayer
+
+	       videoplayer.currentTime = startTime; //not sure if player seeks to seconds or milliseconds
+	       videoplayer.play();
+
+	       //call function to stop player after given intervall
+	       var stopVideoAfter = (endTime - startTime) * 1000;  //* 1000, because Timer is in ms
+	       setTimeout(function(){
+	           //videoplayer.stop();
+	           videoplayer.currentTime = startTime;
+	       }, stopVideoAfter);
+		}
+		/*var videoplayer = document.getElementById("previewvideo");  //get your videoplayer
+		videoplayer.addEventListener("playing", function(event) {
+			if (videoplayer.currentTime == 5) {
+				videoplayer.currentTime = 2;
+			}
+		}, false);*/
 	</script>
 	<style type="text/css">
 	body {
@@ -250,14 +307,22 @@ echo "<form method='post' action='zoom_vid.php'>";
 echo "
 <center>
 	<table><tr><td><a href='zoom_vid.php' style='text-decoration:none;' class='text_color1'>Show video</a></td><td><textarea style='width:400px;height:30px;' name='original_file' id='original_file'>$original_file</textarea></td><td><a href=\"#\" id=\"videolink1\" class='text_color1 custom-file-upload' style='text-decoration:none'>Update</a><label for='file-upload' class='custom-file-upload'><i class='fa fa-cloud-upload'></i> Browse</label><input id='file-upload' type='file' accept='video/*' /><div id='message' style='display: none;'></div></td></tr></table>
-	<video controls autoplay loop width='640' height='360' id='loaded_video'>
-	<source id=\"video_source\" src=\"\" type=\"video/mp4\"  />
-	</video>
+	<span>
+		<video controls autoplay loop width='640' height='360' id='loaded_video' style='display: inline-block;'>
+		<source id=\"video_source\" src=\"\" type=\"video/mp4\"  />
+		</video>
+		<video controls autoplay loop width='640' height='360' id='previewvideo' style='display: inline-block;'>
+		<source id=\"video_source2\" src=\"\" type=\"video/mp4\"  />
+		</video>
+	</span>
 </center>";
 ?>
 <center>
+ <a href="javascript:gettime()" class='text_color1 custom-file-upload' style='text-decoration:none;'>Get Start</a>
  <a href="javascript:settime()" class='text_color1 custom-file-upload' style='text-decoration:none;'>Set Start</a>
+<a href="javascript:gettimeend()" class='text_color1 custom-file-upload' style='text-decoration:none;'>Get End</a>
  <a href="javascript:settimeend()" class='text_color1 custom-file-upload' style='text-decoration:none;'>Set End</a>
+ <a href='#' id='previewlink' class='text_color1 custom-file-upload' style='text-decoration:none;width:150px;'>Load Preview</a>
 </center>
 <script>
 	// tell the embed parent frame the height of the content
@@ -523,8 +588,8 @@ if ($time_limit=='no') {echo " selected";}
 echo ">no</option></select></td></tr>";
 echo "<tr><td>Video track start time</td><td><textarea style='width:200px;height:30px;' name='ud_start' id='ud_start'>00:00:00</textarea></td><td><input type='button' name='ud_start_btn' value='Update' style='width:200px;' class='text_color1 custom-file-upload' onclick='javascript:update_start()'></input></td></tr>";
 echo "<tr><td>Video track end time</td><td><textarea style='width:200px;height:30px;' name='ud_end' id='ud_end'>00:00:00</textarea></td><td><input type='button' name='ud_end_btn' value='Update' style='width:200px;' class='text_color1 custom-file-upload' onclick='javascript:update_end()'></input></td></tr>";
-echo "<tr><td>Time start</td><td><textarea style='width:200px;height:30px;' name='start'>$start</textarea></td><td> 1min = 60</td></tr>";
-echo "<tr><td>Time length</td><td><textarea style='width:200px;height:30px;' name='length'>$length</textarea></td><td>1.6 = 1.6 seconds</td></tr>";
+echo "<tr><td>Time start</td><td><textarea style='width:200px;height:30px;' name='start' id='start'>$start</textarea></td><td> 1min = 60</td></tr>";
+echo "<tr><td>Time length</td><td><textarea style='width:200px;height:30px;' name='length' id='length'>$length</textarea></td><td>1.6 = 1.6 seconds</td></tr>";
 echo "<tr><td>Trim start x</td><td><textarea style='width:200px;height:30px;' name='start_x'>$start_x</textarea></td></tr>";
 echo "<tr><td>Time start y</td><td><textarea style='width:200px;height:30px;' name='start_y'>$start_y</textarea></td></tr>";
 //echo "<tr><td>Zoom</t style='width:200px;height:30px;' name='owid'd><td><textarea style='width:200px;height:30px;' name='zoom'>$zoom</textarea></td></tr>";
@@ -557,13 +622,14 @@ echo ">no</option></select></td></tr>";
 echo "<tr><td>Quality</td><td><textarea style='width:200px;height:30px;' name='QUALITY'>$QUALITY</textarea></td><td> \"default\" for use default</td></tr>";
 echo "</table>";
 //$current_folder = str_replace("http://localhost", "", $_REQUEST['video_url']);
+$current_folder = str_replace("\/var\/www\/html", "", $_REQUEST['video_url']);
 $current_folder = str_replace("general", "var/www/html/general", $_REQUEST['video_url']);
 //http://localhost/var/www/html/general/medialink/medialink/0_Pornsites/HegreArt/
 //$current_folder = preg_replace('localhost', '/file\:\/\/', $_REQUEST['video_url']);
 //$current_folder = str_replace("general", "var/www/html", $_REQUEST['video_url']);
 preg_match('/(.*)\/.*.mp4/', $current_folder, $matches);
 $current_folder = $matches[1]."/clips/";
-echo "<br><input type='hidden' id='save_file' name='save_file' value='y'></input><input type='submit' name='submit' value='Save File' style='width:113px'></input><a href=\"http://localhost/general/zoom/script/zoom_vid.clpmkr\" id=\"videolink1\" class='text_color1 custom-file-upload' style='text-decoration:none'>Run</a><a href=\"".$current_folder."\" id=\"videolink2\" class='text_color1 custom-file-upload' style='text-decoration:none'>ClipsFolder</a><br><br><center><a href='zoom_vid.php' style='text-decoration: none' class='text_color1'>Zoom Video Page Reload</a></center>";
+echo "<br><input type='hidden' id='save_file' name='save_file' value='y'></input><input type='submit' name='submit' value='Save File' style='width:113px'></input><a href=\"http://localhost/general/zoom/script/zoom_vid.clpmkr\" id=\"runlink\" class='text_color1 custom-file-upload' style='text-decoration:none'>Run</a><a href=\"".$current_folder."\" id=\"clipsfolde1link\" class='text_color1 custom-file-upload' style='text-decoration:none'>ClipsFolder</a><br><br><center><a href='zoom_vid.php' style='text-decoration: none' class='text_color1'>Zoom Video Page Reload</a></center>";
 ?>
 </center>
 </form>
