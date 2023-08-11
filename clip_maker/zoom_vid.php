@@ -237,6 +237,10 @@
 				document.getElementsByName('owid')[0].value = '1920';
 				document.getElementsByName('ohei')[0].value = '1080';
 			}
+			else if (select_val == '1280x720') {
+				document.getElementsByName('owid')[0].value = '1280';
+				document.getElementsByName('ohei')[0].value = '720';
+			}
 			else if (select_val != 'Presets') {
 				document.getElementsByName(textboxname)[0].value = select_val;
 			}			
@@ -349,6 +353,43 @@ function save_file($file_content) {
 	fwrite($myFileLink2, $file_content);
 	fclose($myFileLink2);
 }
+#echo $file_content;
+$original_file='';
+$owid=1920;
+$ohei=1080;
+$time_limit='yes';
+$start=0;
+$length=3.0;
+$start_x=0;
+$start_y=0;
+$zoom=1.0;
+$speed=1.0;
+$portrait='n';
+$rev_end='n';
+$screen_s='n';
+$keep_ss_vid='n';
+$QUALITY='-preset slow -crf 15';
+$sharpen='n';
+$network_file='n';
+$fast_resize='n';
+if (isset($_REQUEST['original_file'])) {$original_file=$_REQUEST['original_file'];}
+if (isset($_REQUEST['owid'])) {$owid=$_REQUEST['owid'];}
+if (isset($_REQUEST['ohei'])) {$ohei=$_REQUEST['ohei'];}
+if (isset($_REQUEST['time_limit'])) {$time_limit=$_REQUEST['time_limit'];}
+if (isset($_REQUEST['start'])) {$start=$_REQUEST['start'];}
+if (isset($_REQUEST['length'])) {$length=$_REQUEST['length'];}
+if (isset($_REQUEST['start_x'])) {$start_x=$_REQUEST['start_x'];}
+if (isset($_REQUEST['start_y'])) {$start_y=$_REQUEST['start_y'];}
+if (isset($_REQUEST['zoom'])) {$zoom=$_REQUEST['zoom'];}
+if (isset($_REQUEST['speed'])) {$speed=$_REQUEST['speed'];}
+if (isset($_REQUEST['portrait'])) {$portrait=$_REQUEST['portrait'];}
+if (isset($_REQUEST['rev_end'])) {$rev_end=$_REQUEST['rev_end'];}
+if (isset($_REQUEST['screen_s'])) {$screen_s=$_REQUEST['screen_s'];}
+if (isset($_REQUEST['keep_ss_vid'])) {$keep_ss_vid=$_REQUEST['keep_ss_vid'];}
+if (isset($_REQUEST['QUALITY'])) {$QUALITY=$_REQUEST['QUALITY'];}
+if (isset($_REQUEST['sharpen'])) {$sharpen=$_REQUEST['sharpen'];}
+if (isset($_REQUEST['network_file'])) {$network_file=$_REQUEST['network_file'];}
+if (isset($_REQUEST['fast_resize'])) {$fast_resize=$_REQUEST['fast_resize'];}
 $file_content="
 #!/bin/bash
 #
@@ -393,7 +434,11 @@ speed=".$_REQUEST['speed']." # .5=2x slow down
 portrait=".$_REQUEST['portrait']."
 keep_ss_vid=".$_REQUEST['keep_ss_vid']."
 QUALITY=".$_REQUEST['QUALITY']."
-video_ext=\"mp4|wmv|mov|avi|flv|mpg|mpeg|f4v|webm\";
+sharpen=".$_REQUEST['sharpen']."
+network_file=".$_REQUEST['network_file']."
+network_local=/run/user/1000/gvfs/smb-share:server=192.168.0.195,share=videos/
+fast_resize=".$_REQUEST['fast_resize']."
+video_ext=\"mp4|wmv|mov|avi|flv|mpg|mpeg|f4v|webm|mkv\";
 
 # size of output
 #\$((expression))
@@ -441,7 +486,13 @@ if (isset($_REQUEST['time_limit'])) {$time_limit=$_REQUEST['time_limit'];}
 if ($time_limit=='yes') {$file_content=$file_content."-ss \$s_t ";}
 $file_content=$file_content." -i \${vid} ";
 if ($time_limit=='yes') {$file_content=$file_content."-t \$l_t ";}
-$file_content=$file_content."-filter:v crop=\$out_w:\$out_h:\$x:\$y,setpts=\$spd*PTS \$QUALITY \${NEW_VID}\"";
+if ($fast_resize=='n') {
+$file_content=$file_content."-filter:v crop=\$out_w:\$out_h:\$x:\$y,setpts=\$spd*PTS \$QUALITY";
+}
+else if ($fast_resize=='y') {
+	$file_content=$file_content."-codec copy";
+}
+$file_content=$file_content." \${NEW_VID}\"";
 if ($_REQUEST['rev_end']=='y') {
 	$file_content=$file_content."
 	command=\"\$command && ffmpeg -i \$NEW_VID -vf reverse -af areverse \$QUALITY \$NEW_FILE_REV\"
@@ -546,39 +597,8 @@ command=\"rm \${SCREEN_SHOT_VID_NEW_PATH}\"
 if ($_REQUEST['save_file']=='y') {
 	save_file($file_content);
 }
-#echo $file_content;
-$original_file='';
-$owid=3840;
-$ohei=2160;
-$time_limit='yes';
-$start=122;
-$length=3.0;
-$start_x=0;
-$start_y=0;
-$zoom=1;
-$speed=0.5;
-$portrait='n';
-$rev_end='y';
-$screen_s='n';
-$keep_ss_vid='n';
-$QUALITY='-preset slow -crf 15';
-if (isset($_REQUEST['original_file'])) {$original_file=$_REQUEST['original_file'];}
-if (isset($_REQUEST['owid'])) {$owid=$_REQUEST['owid'];}
-if (isset($_REQUEST['ohei'])) {$ohei=$_REQUEST['ohei'];}
-if (isset($_REQUEST['time_limit'])) {$time_limit=$_REQUEST['time_limit'];}
-if (isset($_REQUEST['start'])) {$start=$_REQUEST['start'];}
-if (isset($_REQUEST['length'])) {$length=$_REQUEST['length'];}
-if (isset($_REQUEST['start_x'])) {$start_x=$_REQUEST['start_x'];}
-if (isset($_REQUEST['start_y'])) {$start_y=$_REQUEST['start_y'];}
-if (isset($_REQUEST['zoom'])) {$zoom=$_REQUEST['zoom'];}
-if (isset($_REQUEST['speed'])) {$speed=$_REQUEST['speed'];}
-if (isset($_REQUEST['portrait'])) {$portrait=$_REQUEST['portrait'];}
-if (isset($_REQUEST['rev_end'])) {$rev_end=$_REQUEST['rev_end'];}
-if (isset($_REQUEST['screen_s'])) {$screen_s=$_REQUEST['screen_s'];}
-if (isset($_REQUEST['keep_ss_vid'])) {$keep_ss_vid=$_REQUEST['keep_ss_vid'];}
-if (isset($_REQUEST['QUALITY'])) {$QUALITY=$_REQUEST['QUALITY'];}
 //echo "<center><table><tr><td style='width:600px'>Video original size width</td><td><textarea style='width:200px;height:30px;' name='owid'>$owid</textarea></td></tr>";
-echo "<center><table><tr><td style='width:600px'>Video original size width</td><td><textarea style='width:200px;height:30px;' name='owid'>$owid</textarea></td><td><select class='select-css' name='owid-select' onchange=\"javascript:change_textbox('owid','owid-select')\"><option>Presets</option><option value='3840x2160'>3840x2160</option><option value='1920x1080'>1920x1080</option><option value='3840'>3840</option><option value='1920'>1920</option></select></td></tr>";
+echo "<center><table><tr><td style='width:600px'>Video original size width</td><td><textarea style='width:200px;height:30px;' name='owid'>$owid</textarea></td><td><select class='select-css' name='owid-select' onchange=\"javascript:change_textbox('owid','owid-select')\"><option>Presets</option><option value='3840x2160'>3840x2160</option><option value='1920x1080'>1920x1080</option><option value='1280x720'>1280x720</option><option value='3840'>3840</option><option value='1920'>1920</option><option value='1280'>1280</option></select></td></tr>";
 //echo "<tr><td>Video original size height</td><td><textarea style='width:200px;height:30px;' name='ohei'>$ohei</textarea></td></tr>";
 echo "<tr><td>Video original size height</td><td><textarea style='width:200px;height:30px;' name='ohei'>$ohei</textarea></td><td><select class='select-css' name='ohei-select' onchange=\"javascript:change_textbox('ohei','ohei-select')\"><option>Presets</option><option value='2160'>2160</option><option value='1080'>1080</option></select></td></tr>";
 echo "<tr><td>Time limit</td><td><select class='select-css' name='time_limit' onchange=\"javascript:change_textbox('time_limit','time_limit')\"><option value='yes'";
@@ -620,11 +640,26 @@ echo ">yes</option><option value='n'";
 if ($keep_ss_vid=='n') {echo " selected";}
 echo ">no</option></select></td></tr>";
 echo "<tr><td>Quality</td><td><textarea style='width:200px;height:30px;' name='QUALITY'>$QUALITY</textarea></td><td> \"default\" for use default</td></tr>";
+echo "<tr><td>Sharpen</td><td><select name='sharpen' class='select-css'><option value='y'"; 
+if ($sharpen=='y') {echo " selected";}
+echo ">yes</option><option value='n'";
+if ($sharpen=='n') {echo " selected";}
+echo ">no</option></select></td></tr>";
+echo "<tr><td>Network vid</td><td><select name='network_vid' class='select-css'><option value='y'"; 
+if ($network_vid=='y') {echo " selected";}
+echo ">yes</option><option value='n'";
+if ($network_vid=='n') {echo " selected";}
+echo ">no</option></select></td></tr>";
+echo "<tr><td>Fast resize</td><td><select name='fast_resize' class='select-css'><option value='y'"; 
+if ($fast_resize=='y') {echo " selected";}
+echo ">yes</option><option value='n'";
+if ($fast_resize=='n') {echo " selected";}
+echo ">no</option></select></td></tr>";
 echo "</table>";
 //$current_folder = str_replace("http://localhost", "", $_REQUEST['video_url']);
 $current_folder = str_replace("\/var\/www\/html", "", $_REQUEST['video_url']);
 $current_folder = str_replace("general", "var/www/html/general", $_REQUEST['video_url']);
-//http://localhost/var/www/html/general/medialink/medialink/0_Pornsites/HegreArt/
+//http://localhost/var/www/html/general/medialink/medialink/dir/dir/
 //$current_folder = preg_replace('localhost', '/file\:\/\/', $_REQUEST['video_url']);
 //$current_folder = str_replace("general", "var/www/html", $_REQUEST['video_url']);
 preg_match('/(.*)\/.*.mp4/', $current_folder, $matches);
